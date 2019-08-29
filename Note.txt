@@ -1,0 +1,22 @@
+- REFSEL (pin 4) - Set to LOW or AGND for internal 4.096 Vref
+	* REFIO (pin 5) becomes output with the internal reference value <-> Place 10uF decoupling REFIO and REFGND 
+- AVDD (pin 9/30) 5V
+- DVDD (pin 34) 3.3 V
+- RST/PD  3.3 or 5 V 
+- AUX: NC
+- AGND is NOT same as AIN_xGND
+- Decoupling necessary!
+
+
+
+
+AGND 	8	GND
+AUX_IN 	10 	NC
+AUX_GND	11 	NC
+ 
+
+
+Driver (page 34 example)
+- Channel selection and read is made in two steps
+	First a frame for to specify the channel of interest 
+	Second a frame to do the read. 
