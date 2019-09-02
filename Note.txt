@@ -20,3 +20,4 @@ Driver (page 34 example)
 - Channel selection and read is made in two steps
 	First a frame for to specify the channel of interest 
 	Second a frame to do the read. 
+- Include a delay of 50 ms at initialization for power supply to start up.
