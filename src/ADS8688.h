@@ -138,14 +138,24 @@
             void     setChannelHighThreshold(uint8_t ch, uint16_t val); //
         
             uint8_t  getCommandReadBack();                              // Command executed in previous data frame.
-        
+
+            void setDaisyChainsNmb(uint8_t DaisyChainNmb);        // Speicy numbers of ADCs in daisy chain configuration (series of ADCs)
+            void setChannelSPDDaisy(uint8_t &flag); 
+            void setChannelSequenceDaisy(uint8_t &flag);
+            void noOpDaisy(uint16_t *ADCBuffer1, uint16_t *ADCBuffer2);
+            void cmdRegisterDaisy(uint8_t reg, uint16_t *ADCBuffer1, uint16_t *ADCBuffer2);
+
+            void printVref();
+
 		private:
             float _vref;
-            uint8_t _cs, _mode, _feature;                 // chip select pin, current operation mode
+            uint8_t _cs, _mode, _feature, _DaisyChainNmb, _GlobalRange;                 // chip select pin, current operation mode
             void writeRegister(uint8_t reg, uint8_t val); // write 8 bit data into a register
             uint8_t readRegister(uint8_t reg);            // read 8 bit data in a specific register
             uint16_t cmdRegister(uint8_t reg);            // send a command register and read
-            uint16_t _sclk = 7000000;                     // sclk frequency 5 MHz
+            uint32_t _sclk = 10000000;                     // sclk frequency 7 MHz
+            uint8_t _ChannelNmb = 8;                      // Amount of channels to read 
+            uint8_t popcount(uint8_t x);                  // Count selected channels
         };
 
 #endif // ADS8688_h
