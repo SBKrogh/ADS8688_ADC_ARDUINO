@@ -142,10 +142,14 @@
             void setDaisyChainsNmb(uint8_t DaisyChainNmb);        // Speicy numbers of ADCs in daisy chain configuration (series of ADCs)
             void setChannelSPDDaisy(uint8_t &flag); 
             void setChannelSequenceDaisy(uint8_t &flag);
-            void noOpDaisy(uint16_t *ADCBuffer1, uint16_t *ADCBuffer2);
-            void cmdRegisterDaisy(uint8_t reg, uint16_t *ADCBuffer1, uint16_t *ADCBuffer2);
+            void noOpDaisy();
+            void cmdRegisterDaisy(uint8_t reg);
 
             void printVref();
+            
+            std::vector<float> ReturnADC_FSR();
+            std::vector<float> ReturnADC_EMG();
+
 
 		private:
             float _vref;
@@ -156,6 +160,7 @@
             uint32_t _sclk = 1000000;                     // sclk frequency 7 MHz
             uint8_t _ChannelNmb = 8;                      // Amount of channels to read 
             uint8_t popcount(uint8_t x);                  // Count selected channels
+            std::vector<float> _ADC_Buffer_FSR, _ADC_Buffer_EMG;
         };
 
 #endif // ADS8688_h

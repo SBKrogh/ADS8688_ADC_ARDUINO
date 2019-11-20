@@ -27,6 +27,9 @@ ADS8688 bank = ADS8688(14);             // Instantiate ADS8688 with PIN 14 as de
 uint16_t ADCBuffer1[8];                 // Buffer for ADC 1
 uint16_t ADCBuffer2[8];                 // Buffer for ADC 2
 
+
+ std::vector<float> FSR, EMG;
+
 void setup() {
   delay(100);
   Serial.begin(9600);                   // start serial communication
@@ -37,17 +40,30 @@ void setup() {
   }
 
 void loop() {
-  bank.noOpDaisy(ADCBuffer1, ADCBuffer2);   // Trigger ADCs to sample analog ports
+  bank.noOpDaisy();   // Trigger ADCs to sample analog ports
 
   Serial.println(" ADC 1  | ADC 2");
 
-  for (byte i=0;i<8;i++) {
-    Serial.print(bank.I2V(ADCBuffer1[i],R0)); // print ADC1 Voltage
-    Serial.print(" V | ");                    // print Volt label
-    Serial.print(bank.I2V(ADCBuffer2[i],R0)); // print ADC2 Voltage
-    Serial.println(" V");                     // print Volt label
-  }
+  // for (byte i=0;i<8;i++) {
+  //   Serial.print(bank.I2V(ADCBuffer1[i],R0)); // print ADC1 Voltage
+  //   Serial.print(" V | ");                    // print Volt label
+  //   Serial.print(bank.I2V(ADCBuffer2[i],R0)); // print ADC2 Voltage
+  //   Serial.println(" V");                     // print Volt label
+  // }
+
+  FSR = bank.ReturnADC_FSR();
+  EMG = bank.ReturnADC_EMG();
+
+for (size_t i = 0; i < 8; i++)
+{
+    Serial.print(FSR[i]); // print ADC1 Voltage
+    Serial.print(" VFSR | ");                    // print Volt label
+    Serial.print(EMG[i]); // print ADC2 Voltage
+    Serial.println(" VEMG");      
+}
+
+
 
   Serial.println("");                    // new line 
-  delay(1000);                           // wait for 1000 milliseconds
+  delay(2000);                           // wait for 1000 milliseconds
   }

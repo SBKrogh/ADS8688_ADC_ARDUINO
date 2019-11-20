@@ -571,9 +571,9 @@ void ADS8688::setDaisyChainsNmb(uint8_t DaisyChainNmb)
     _DaisyChainNmb = DaisyChainNmb;
 }
 
-void ADS8688::noOpDaisy(uint16_t *ADCBuffer1, uint16_t *ADCBuffer2)
+void ADS8688::noOpDaisy()
 {
-    cmdRegisterDaisy(NO_OP, ADCBuffer1, ADCBuffer2);
+    cmdRegisterDaisy(NO_OP);
 }
 
 /////////////////////////////////////
@@ -584,10 +584,13 @@ This will only work if the ADCs registers are set to the same values!
 This only works for a two Daisy chain configuration. For dynamic Daisy chain configuration 
 adjustment to cmdRegisterDaisy is needed! 
 */
-void ADS8688::cmdRegisterDaisy(uint8_t reg, uint16_t *ADCBuffer1, uint16_t *ADCBuffer2)
+void ADS8688::cmdRegisterDaisy(uint8_t reg)
 {
     byte MSB;
     byte LSB;
+    _ADC_Buffer_FSR.erase(_ADC_Buffer_FSR.begin(),_ADC_Buffer_FSR.end());    // Empty the ADC FSR buffer
+    _ADC_Buffer_EMG.erase(_ADC_Buffer_EMG.begin(),_ADC_Buffer_EMG.end());    // Empty the ADC EMG buffer
+
     for (size_t i = 0; i < _ChannelNmb; i++)
     {
         SPI.beginTransaction(SPISettings(_sclk, MSBFIRST, SPI_MODE1));
@@ -599,14 +602,14 @@ void ADS8688::cmdRegisterDaisy(uint8_t reg, uint16_t *ADCBuffer1, uint16_t *ADCB
         SPI.beginTransaction(SPISettings(_sclk, MSBFIRST, SPI_MODE0)); // Necessary for ESP32
         if (_mode > 4)
         {
-            // only 16 bit if POWERDOWN or STDBY or RST or IDLE
             MSB = SPI.transfer(0x00);
             LSB = SPI.transfer(0x00);
-            ADCBuffer2[i] = (MSB << 8) | LSB;
+            _ADC_Buffer_EMG.push_back(I2V((MSB << 8) | LSB ,_GlobalRange));
+
+            MSB = SPI.transfer(0x00);
+            LSB = SPI.transfer(0x00);
+            _ADC_Buffer_FSR.push_back(I2V((MSB << 8) | LSB ,_GlobalRange));
             
-            MSB = SPI.transfer(0x00);
-            LSB = SPI.transfer(0x00);
-            ADCBuffer1[i] = (MSB << 8) | LSB;           
         }
         digitalWrite(_cs, HIGH);
         SPI.endTransaction();
@@ -647,4 +650,12 @@ void ADS8688::cmdRegisterDaisy(uint8_t reg, uint16_t *ADCBuffer1, uint16_t *ADCB
         _mode = MODE_MANUAL;
         break;
     }
+}
+
+std::vector<float> ADS8688::ReturnADC_FSR(){
+    return _ADC_Buffer_FSR;
+}
+
+std::vector<float> ADS8688::ReturnADC_EMG(){
+    return _ADC_Buffer_EMG;
 }
