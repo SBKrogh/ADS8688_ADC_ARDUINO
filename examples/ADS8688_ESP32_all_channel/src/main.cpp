@@ -30,18 +30,10 @@ uint16_t ADCBuffer2[8];                 // Buffer for ADC 2
 void setup() {
   delay(100);
   Serial.begin(9600);                   // start serial communication
-  //while(1){
   bank.setChannelSPD(0b11111111);       // bitwise channel selection 
-  // delay(1000);
   bank.setDaisyChainsNmb(NmbOfADC);     // Specify number of ADCs in series
-  // delay(1000);
   bank.setGlobalRange(R0);              // set range for all channels
-  // delay(1000);
   bank.autoRst();                       // reset auto sequence
-  // delay(1000);
-  //}
-
-  
   }
 
 void loop() {
