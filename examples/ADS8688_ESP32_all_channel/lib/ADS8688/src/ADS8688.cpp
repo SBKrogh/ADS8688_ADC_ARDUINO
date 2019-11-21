@@ -602,10 +602,14 @@ void ADS8688::cmdRegisterDaisy(uint8_t reg)
         SPI.beginTransaction(SPISettings(_sclk, MSBFIRST, SPI_MODE0)); // Necessary for ESP32
         if (_mode > 4)
         {
+
             MSB = SPI.transfer(0x00);
             LSB = SPI.transfer(0x00);
-            _ADC_Buffer_EMG.push_back(I2V((MSB << 8) | LSB ,_GlobalRange));
-
+            if (i < 4)
+            {
+                 _ADC_Buffer_EMG.push_back(I2V((MSB << 8) | LSB ,_GlobalRange)); // Only four channels of the EMG ADC are used 
+            }
+            
             MSB = SPI.transfer(0x00);
             LSB = SPI.transfer(0x00);
             _ADC_Buffer_FSR.push_back(I2V((MSB << 8) | LSB ,_GlobalRange));

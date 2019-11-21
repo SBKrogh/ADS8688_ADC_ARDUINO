@@ -57,13 +57,13 @@ void loop() {
 for (size_t i = 0; i < 8; i++)
 {
     Serial.print(FSR[i]); // print ADC1 Voltage
-    Serial.print(" VFSR | ");                    // print Volt label
-    Serial.print(EMG[i]); // print ADC2 Voltage
-    Serial.println(" VEMG");      
+    Serial.print(" VFSR | ");
+    if(i < 4){                    // print Volt label
+      Serial.print(EMG[i]); // print ADC2 Voltage
+      Serial.print(" VEMG");      
+    }
+    Serial.println();
 }
-
-
-
   Serial.println("");                    // new line 
   delay(2000);                           // wait for 1000 milliseconds
   }
